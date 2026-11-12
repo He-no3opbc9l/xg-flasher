@@ -1,0 +1,68 @@
+:root {
+  --bg: #111418; --card: #1a1f26; --line: #2b323c; --fg: #e4e8ee; --muted: #8b95a3;
+  --accent: #3d8bfd; --bad: #e5484d; --warn: #f5a524; --ok: #30a46c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.45 system-ui, sans-serif; }
+header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--line); }
+h1 { margin: 0; font-size: 22px; }
+header p { margin: 2px 0 0; color: var(--muted); }
+h2 { margin: 0 0 12px; font-size: 16px; }
+main { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; padding: 16px 24px; max-width: 1200px; margin: 0 auto; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.wide { grid-column: 1 / -1; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 10px 0; }
+button { background: #252c35; color: var(--fg); border: 1px solid var(--line); border-radius: 7px; padding: 8px 14px; font: inherit; cursor: pointer; }
+button:hover:not(:disabled) { border-color: var(--accent); }
+button:disabled { opacity: .4; cursor: default; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.danger { border-color: var(--bad); color: #ff8b8e; }
+#lang button { padding: 4px 10px; }
+#lang button.on { border-color: var(--accent); color: var(--accent); }
+input, select { background: #0e1115; color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font: inherit; }
+input[type=number] { width: 90px; }
+.mono, code, pre { font-family: ui-monospace, 'JetBrains Mono', Consolas, monospace; font-size: 13px; }
+.muted { color: var(--muted); }
+.warn { color: var(--warn); }
+table { border-collapse: collapse; width: 100%; }
+th { text-align: left; font-weight: normal; color: var(--muted); padding: 4px 12px 4px 0; white-space: nowrap; width: 1%; }
+td { padding: 4px 0; word-break: break-all; }
+.banner { border-radius: 8px; padding: 10px 12px; margin: 10px 0; }
+.bad { background: #3b1719; border: 1px solid var(--bad); }
+.warnbox { background: #3a2a0c; border: 1px solid var(--warn); }
+body > .banner { margin: 16px 24px 0; }
+.tag-ok { color: var(--ok); }
+.tag-bad { color: var(--bad); font-weight: 600; }
+.drop { display: block; border: 2px dashed var(--line); border-radius: 10px; padding: 22px; text-align: center; cursor: pointer; color: var(--muted); word-break: break-all; }
+.drop.over, .drop:hover { border-color: var(--accent); }
+.drop.has { color: var(--fg); border-style: solid; }
+.drop input { display: none; }
+#analysis { margin: 10px 0; padding: 10px 12px; border-radius: 8px; background: #0e1115; border: 1px solid var(--line); }
+#analysis.ok { border-color: var(--ok); }
+#analysis.warn { border-color: var(--warn); color: var(--fg); }
+#analysis.bad { border-color: var(--bad); }
+#analysis p { margin: 2px 0; }
+#analysis .detail { color: var(--muted); font-size: 13px; }
+.check { display: flex; gap: 8px; align-items: flex-start; margin: 6px 0; }
+.check input { margin-top: 3px; }
+#status { min-height: 1.4em; font-weight: 600; }
+#status.ok { color: var(--ok); }
+#status.err { color: var(--bad); }
+progress { width: 100%; height: 10px; margin: 8px 0; accent-color: var(--accent); }
+details summary { cursor: pointer; color: var(--muted); margin-top: 8px; }
+pre#log { max-height: 260px; overflow: auto; background: #0e1115; border-radius: 6px; padding: 10px; margin: 8px 0 0; white-space: pre-wrap; }
+ul { margin: 0; padding-left: 20px; }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+.gap { margin-top: 22px; }
+.small { font-size: 13px; }
+.tabs { display: flex; gap: 18px; margin-bottom: 12px; }
+.tabs label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+select#release { min-width: 260px; }
+button.big { padding: 10px 28px; font-size: 16px; }
+pre#boot { max-height: 220px; overflow: auto; background: #0e1115; border-radius: 6px; padding: 10px; margin: 8px 0 0; white-space: pre-wrap; min-height: 3em; }
+ol { margin: 0; padding-left: 20px; }
+ol li { margin: 4px 0; }
+#lang { display: flex; gap: 6px; }
+#analysis p { overflow-wrap: anywhere; }

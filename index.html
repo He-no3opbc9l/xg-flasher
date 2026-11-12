@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XG flasher</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1>XG flasher</h1>
+    <p data-i18n="subtitle"></p>
+  </div>
+  <nav id="lang"><button data-lang="ru">RU</button><button data-lang="en">EN</button></nav>
+</header>
+
+<div id="noserial" class="banner bad" hidden></div>
+
+<main>
+  <section class="card">
+    <h2 data-i18n="fwTitle"></h2>
+    <div class="tabs">
+      <label><input type="radio" name="src" value="rel" checked> <span data-i18n="srcReleases"></span></label>
+      <label><input type="radio" name="src" value="file"> <span data-i18n="srcFile"></span></label>
+    </div>
+    <div id="src-rel">
+      <p id="relstate" class="muted" data-i18n="loadingReleases"></p>
+      <div class="row" id="relrow" hidden>
+        <select id="release"></select>
+        <a id="relnotes" target="_blank" rel="noopener" data-i18n="releaseNotes"></a>
+      </div>
+    </div>
+    <div id="src-file" hidden>
+      <label id="drop" class="drop">
+        <input id="file" type="file" accept=".xgf,.zip,.bin,application/octet-stream,application/zip">
+        <span id="fileinfo" data-i18n="drop"></span>
+      </label>
+    </div>
+    <div id="analysis" hidden></div>
+  </section>
+
+  <section class="card">
+    <h2 data-i18n="port"></h2>
+    <div class="row">
+      <button id="choose" class="primary" data-i18n="choosePort"></button>
+      <button id="close" data-i18n="closePort" disabled></button>
+    </div>
+    <p id="portinfo" class="muted" data-i18n="noPort"></p>
+
+    <h2 class="gap" data-i18n="flashTitle"></h2>
+    <div data-i18n-html="howto"></div>
+    <div class="row">
+      <button id="flash" class="primary big" data-i18n="flash" disabled></button>
+      <button id="cancel" data-i18n="cancel" hidden></button>
+    </div>
+  </section>
+
+  <section class="card wide">
+    <div id="status"></div>
+    <progress id="progress" max="1" value="0" hidden></progress>
+    <details open>
+      <summary data-i18n="bootOut"></summary>
+      <pre id="boot"></pre>
+    </details>
+    <details>
+      <summary data-i18n="log"></summary>
+      <pre id="log"></pre>
+    </details>
+  </section>
+
+  <section class="card wide">
+    <h2 data-i18n="notesTitle"></h2>
+    <div data-i18n-html="notes"></div>
+    <p class="muted small"><a href="https://github.com/He-no3opbc9l/xg-flasher">xg-flasher</a> · <a href="https://github.com/He-no3opbc9l/g106-open">g106-open</a></p>
+  </section>
+</main>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+# GitHub Pages: the site + the .xgf of every release of the repos in sources.json
+# (tools/pages_releases.py). The firmware lives in other repos, so new releases are picked up by an
+# hourly check; it deploys only when the release list differs from the live site.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.cmp.outputs.changed }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - id: pages
+      uses: actions/configure-pages@v5
+
+    - name: Site + release firmware
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir _site
+        cp -r index.html style.css js .nojekyll LICENSE _site/
+        python3 -I tools/pages_releases.py _site
+        find _site -type f | sort
+
+    # Scheduled runs: deploy only if the releases changed
+    - id: cmp
+      run: |
+        if [ "${{ github.event_name }}" = schedule ] &&
+           curl -sfL "${{ steps.pages.outputs.base_url }}/fw/releases.json" -o live.json &&
+           cmp -s live.json _site/fw/releases.json; then
+          echo "release list unchanged, no deploy"
+          echo changed=0 >> "$GITHUB_OUTPUT"
+        else
+          echo changed=1 >> "$GITHUB_OUTPUT"
+        fi
+
+    - if: steps.cmp.outputs.changed == '1'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: _site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.changed == '1'
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - id: deployment
+      uses: actions/deploy-pages@v4

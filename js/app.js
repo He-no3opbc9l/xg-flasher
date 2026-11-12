@@ -70,8 +70,6 @@ function showAnalysis() {
   if (i.kind === 'open') lines.push([`${i.label}${f.tag ? ' ' + f.tag : ''}${i.built ? ' — ' + t('built', { date: i.built }) : ''}`]);
   else if (i.kind === 'stock') lines.push([t('kind_stock', { label: i.label })]);
   else lines.push([t('kind_other')]);
-  lines.push([t('vec', { size: i.xgf.length, reset: hex(i.vec.reset), sp: hex(i.vec.sp) }), 'detail']);
-  lines.push([`SHA-256 ${i.sha}`, 'detail mono']);
   if (f.zipName) lines.push([t('fromZip', { name: f.zipName }), 'detail']);
   if (f.zipMany) lines.push([t('zipMany', { name: f.zipName }), 'detail']);
   if (i.wasRaw) lines.push([t('rawEncrypted'), 'detail']);

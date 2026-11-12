@@ -49,6 +49,8 @@ function render() {
   $('cancel').hidden = !busy;
   for (const el of document.querySelectorAll('input[name=src], #release, #file')) el.disabled = busy;
   $('src-rel').hidden = src !== 'rel';
+  const cur = releases[+$('release').value.split(':')[0]];
+  if (cur) $('relnotes').textContent = t(cur.nightly ? 'commit' : 'releaseNotes');
   $('src-file').hidden = src !== 'file';
   showAnalysis();
 }
@@ -73,7 +75,8 @@ function showAnalysis() {
   if (f.zipName) lines.push([t('fromZip', { name: f.zipName }), 'detail']);
   if (f.zipMany) lines.push([t('zipMany', { name: f.zipName }), 'detail']);
   if (i.wasRaw) lines.push([t('rawEncrypted'), 'detail']);
-  a.className = i.kind === 'other' ? 'warn' : 'ok';
+  if (f.nightly) lines.push([t('nightlyNote')]);
+  a.className = i.kind === 'other' || f.nightly ? 'warn' : 'ok';
   a.innerHTML = '';
   for (const [text, cls] of lines) a.append(Object.assign(document.createElement('p'), { textContent: text, className: cls || '' }));
 }
@@ -85,7 +88,8 @@ async function loadReleases() {
   try {
     const r = await fetch('fw/releases.json', { cache: 'no-cache' });
     if (!r.ok) throw new Error(r.status);
-    releases = (await r.json()).releases.filter(x => x.files.length);
+    const m = await r.json();
+    releases = [...m.releases, ...(m.nightly || []).map(n => ({ ...n, nightly: true }))].filter(x => x.files.length);
   } catch {
     releases = [];
   }
@@ -105,12 +109,17 @@ function fillReleases() {
   const sel = $('release'), keep = sel.value;
   sel.innerHTML = '';
   const repos = new Set(releases.map(r => r.repo));
-  const latest = new Set([...repos].map(repo => releases.find(r => r.repo === repo && !r.prerelease)));
+  const latest = new Set([...repos].map(repo => releases.find(r => r.repo === repo && !r.prerelease && !r.nightly)));
+  const groups = { rel: document.createElement('optgroup'), nightly: document.createElement('optgroup') };
+  groups.rel.label = t('groupReleases');
+  groups.nightly.label = t('groupNightly');
   releases.forEach((r, ri) => r.files.forEach((f, fi) => {
     const tags = [r.date?.slice(0, 10), latest.has(r) ? t('latest') : '', r.prerelease ? t('prerelease') : ''].filter(Boolean);
-    const label = `${repos.size > 1 ? r.repo.split('/').pop() + ' ' : ''}${r.tag}${r.files.length > 1 ? ' / ' + f.name : ''} (${tags.join(', ')})`;
-    sel.append(new Option(label, `${ri}:${fi}`));
+    const msg = r.nightly && r.name ? ' ' + (r.name.length > 40 ? r.name.slice(0, 39) + '…' : r.name) : '';
+    const label = `${repos.size > 1 ? r.repo.split('/').pop() + ' ' : ''}${r.tag}${r.files.length > 1 ? ' / ' + f.name : ''}${msg} (${tags.join(', ')})`;
+    groups[r.nightly ? 'nightly' : 'rel'].append(new Option(label, `${ri}:${fi}`));
   }));
+  for (const g of Object.values(groups)) if (g.children.length) sel.append(g);
   if (keep) sel.value = keep;
 }
 
@@ -129,7 +138,7 @@ async function pickRelease() {
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = new Uint8Array(await resp.arrayBuffer());
       if (f.sha256 && await sha256(data) !== f.sha256) throw new Error('sha');
-      got = { name: f.name, tag: r.tag, info: await analyze(data) };
+      got = { name: f.name, tag: r.nightly ? 'nightly ' + r.tag : r.tag, nightly: !!r.nightly, info: await analyze(data) };
       cache.set(f.path, got);
       status('');
       log(t('fileLoaded', { name: f.name, size: data.length, sha: got.info.sha }));

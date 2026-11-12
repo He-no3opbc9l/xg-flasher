@@ -36,7 +36,6 @@ const STR = {
     notes: `<ul>
 <li>Пишется только приложение с <code>0x08020000</code>, загрузчик не трогается. Настройки сохраняются.</li>
 <li>Заводская прошивка: выберите её .xgf или архив .zip.</li>
-<li>USART1: PA9 TX, PA10 RX, 3,3 В.</li>
 </ul>`,
     // dynamic
     fileLoaded: '{name}: {size} байт, SHA-256 {sha}',
@@ -106,7 +105,6 @@ const STR = {
     notes: `<ul>
 <li>Only the application from <code>0x08020000</code> is written, the bootloader is kept. Settings are kept.</li>
 <li>Stock firmware: choose its .xgf or .zip archive.</li>
-<li>USART1: PA9 TX, PA10 RX, 3.3 V.</li>
 </ul>`,
     fileLoaded: '{name}: {size} bytes, SHA-256 {sha}',
     downloading: 'Downloading {name}…',
